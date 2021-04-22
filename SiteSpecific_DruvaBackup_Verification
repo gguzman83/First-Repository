@@ -1,0 +1,46 @@
+Import-Module ActiveDirectory
+
+#Could also use "Endpoint Management - Druva Onboarding Test Group" as ADsecGroup
+#Could also use "Druva Onboarding Testing" as ADsecGrup
+
+$Users = Import-Csv "C:\Users\gguzman-admin\Desktop\Site_Specific_Import.csv"
+
+#=========================================
+
+Write-host "Starting User import" -ForegroundColor 'White'
+
+ foreach ($User in $Users)
+
+{
+""
+    Write-Host "Checking User: " $User.Username
+    Write-Host "Checking Backup Group: " $User.BackupGroup 
+    
+   $ADGroup =$User.BackupGroup
+   $ADUser =$User.Username
+   $ADSiteSpecific = "Druva Onboarding Testing"
+#=======================================================================
+    
+    if ($Members.SAMAccountName -contains $User.Username)
+    
+    {
+        Write-Host "User already in Backup Group: " $User.BackupGroup -foreground 'Green'
+    }
+        else
+        
+        {
+            Write-Host "User Adding to Backup Group: " $User.Username -foreground 'Yellow'
+            
+            try
+
+            {
+                Write-Host "User added to Backup Group: " $ADGroup -foreground 'Green'
+                    Add-ADGroupMember -Identity "$ADSiteSpecific" -Members "$ADUser"
+            }
+                catch 
+        
+                {
+                    Write-Host "COMPLETED" -Foreground Cyan
+                }
+        }
+}
