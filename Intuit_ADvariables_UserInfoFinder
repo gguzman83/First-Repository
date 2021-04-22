@@ -1,0 +1,3 @@
+Import-Module ActiveDirectory
+
+Get-ADUser *username* -Properties * | Select-Object Enabled, DisplayName, EmailAddress, mail
