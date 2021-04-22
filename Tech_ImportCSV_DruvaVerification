@@ -18,3 +18,61 @@ $backupgroup = $user.'BackupGroup'
 
 echo "Account created for $username $backupgroup"
 }
+
+##################################################
+#FULL SCRIPT# - Below
+##################################################
+Import-Module ActiveDirectory
+
+#Could also use "Endpoint Management - Druva Onboarding Test Group" as ADsecGroup
+#Could also use "Druva Onboarding Testing" as ADsecGrup
+
+#Prompt User for CSV file path. Must create variable to call
+$file = Read-Host -Prompt "Please enter the path to your CSV file"
+
+#Import the file. Make another Variable
+$users = Import-Csv $file  
+
+#=========================================
+#=========================================
+
+Write-host "Starting User import" -ForegroundColor 'White'
+
+ foreach ($User in $Users)
+
+{
+#Using quotations helps read the output of script. Line spacing    
+""
+     Write-Host "Checking User: " $User.Email
+     Write-Host "Checking Backup Group: " $User.BackupGroup
+    
+    $ADGroup = $User.BackupGroup
+    $Members = Get-ADGroupMember -Identity $ADGroup
+
+#=======================================================================
+    
+    if ($Members.SAMAccountName -contains $User.Email)
+    
+    {
+        Write-Host "User already in Backup Group: " $User.BackupGroup -foreground 'Green'
+            $Existing += $User
+    }
+        else
+        
+        {
+            Write-Host "User Adding to Backup Group: " $User.Email -foreground 'White'
+            
+            try
+
+            {
+                Write-Host "User added to Backup Group: " $ADGroup -foreground 'Green'
+                    Add-ADGroupMember -Identity $ADGroup -Members $User.Username
+                        $Added += $User
+            }
+                catch 
+        
+                {
+                    Write-Host "COMPLETED" -Foreground Cyan
+                }
+        }
+}
