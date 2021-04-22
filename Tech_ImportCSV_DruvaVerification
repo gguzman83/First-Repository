@@ -1,0 +1,20 @@
+#Import required Module
+Import-Module ActiveDirectory
+
+#Prompt User for CSV file path. Must create variable to call
+$file = Read-Host -Prompt "Please enter the path to your CSV file"
+
+#Import the file. Make another Variable
+$users = Import-Csv $file  
+
+#Loop through each row to gather information starting at line 1
+ForEach ($user in $users)
+   {
+#Gather the users information
+$username = $user.'Email'
+$backupgroup = $user.'BackupGroup'
+
+#Use echo command to display command or selected commands
+
+echo "Account created for $username $backupgroup"
+}
