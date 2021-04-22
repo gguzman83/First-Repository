@@ -1,0 +1,6 @@
+Import-Module ActiveDirectory
+
+$OutputCSV = 'C:\Users\gguzman-admin\Desktop\UserStatusOutput.csv'
+
+Get-ADUser -Filter * |
+Select-Object DisplayName,Enabled,EmailAddress | Export-Csv -Path $OutputCSV -NoTypeInformation
